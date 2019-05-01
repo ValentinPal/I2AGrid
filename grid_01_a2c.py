@@ -23,6 +23,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 NUM_ENVS = 32
+
 REWARD_STEPS = 1
 
 VALUE_LOSS_COEF = 0.5
