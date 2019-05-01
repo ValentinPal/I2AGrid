@@ -2,4 +2,9 @@
 runs-5/
 runs-7/
 runs-9/
+runs/
 gym-RandomGoalsGrid/gym_RandomGoalsGrid.egg-info/
+gym-RandomGoalsGrid/gym_RandomGoalsGrid/__pycache__/
+gym-RandomGoalsGrid/gym_RandomGoalsGrid/envs/__pycache__/
+lib/__pycache__/
+
