@@ -144,13 +144,11 @@ class RewardTracker:
 
 def getNet(device):
     net = None
-    if pixelsEnv:
-        if CONV_LARGE:
-            net = AtariA2CLarge(IMG_SHAPE, 4).to(device)
-        else:
-            net = AtariA2CSmall(IMG_SHAPE, 4).to(device)
+    if CONV_LARGE:
+        net = AtariA2CLarge(IMG_SHAPE, 4).to(device)
     else:
-        net = MatrixA2C(GRID_SIZE ** 2, 4).to(device)
+        net = AtariA2CSmall(IMG_SHAPE, 4).to(device)
+
     print(net)
     return net
 
@@ -180,7 +178,7 @@ def make_env(test=False, clip=True, env_name = "BreakoutNoFrameskip-v4"):
 
 
 
-def set_seed(seed, envs=None, cuda=False):
+def set_seed(seed, envs=None, cuda=True):
     np.random.seed(seed)
     torch.manual_seed(seed)
     if cuda:
@@ -188,6 +186,7 @@ def set_seed(seed, envs=None, cuda=False):
 
     if envs:
         for idx, env in enumerate(envs):
+            #required to have different seed per environment, so not to gather the same tuples from all environments
             env.seed(seed + idx)
 
 def discount_with_dones(rewards, dones, gamma):
