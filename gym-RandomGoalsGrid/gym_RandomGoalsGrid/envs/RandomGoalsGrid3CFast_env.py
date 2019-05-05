@@ -25,54 +25,38 @@ class RandomGoalsGrid3CFast(gym.Env):
     metadata = {'render.modes': ['human']}
     
     def customInit(self, **kwargs):
-#        
-#        self.sizeX = 5
-#        self.sizeY = 5
         if 'size' in kwargs:
             self.sizeX = kwargs.get("size")
             self.sizeY = self.sizeX
-#            
-#        self.actions = 4
-#        self.objects = [] 
         
-#        self.partial = False
         if 'partial' in kwargs:
             self.partial = kwargs.get("partial")
         
-#        self.maxGameLength = 50
         if 'maxGameLength' in kwargs:
             self.maxGameLength = kwargs.get("maxGameLength")
 
-#        self.currentStepIndex = 0
         
-#        self.pixelsEnv = True
         if 'pixelsEnv' in kwargs:
             self.pixelsEnv = kwargs.get("pixelsEnv")
         
-#        self.objectSize = 4
         if 'objectSize' in kwargs:
             self.objectSize = kwargs.get("objectSize")
         
-#        self.frameSize = 84
         if 'frameSize' in kwargs:
             self.frameSize = kwargs.get("frameSize")
             self.objectSize = (int)(self.frameSize/(self.sizeX + 2))
         
         self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3, self.frameSize, self.frameSize), dtype=np.uint8)
         
-#        self.replacement = True
         if 'replacement' in kwargs:
             self.replacement = kwargs.get("replacement")
         
-#        self.negativeReward = -1
         if 'negativeReward' in kwargs:
             self.negativeReward = kwargs.get("negativeReward")
             
-#        self.positiveReward = 1
         if 'positiveReward' in kwargs:
             self.positiveReward = kwargs.get("positiveReward")
             
-#        self.emptySquareReward = -0.1
         if 'emptySquareReward' in kwargs:
             self.emptySquareReward = kwargs.get("emptySquareReward")
         
@@ -102,6 +86,8 @@ class RandomGoalsGrid3CFast(gym.Env):
 #        a = self.reset()
 #        plt.imshow(a,interpolation="nearest")
         
+    def seed(self, seed):
+        np.random.seed(seed)
         
     def reset(self):
         self.objects = []
