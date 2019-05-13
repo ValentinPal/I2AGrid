@@ -14,9 +14,8 @@ import gym
 import gym_RandomGoalsGrid
 
 import random
-import sys
 
-from lib import common, i2a, common_new
+from lib import common, i2a
 
 NUM_ENVS = 32
 SAVE_EVERY_BATCH = 1000
@@ -28,14 +27,6 @@ GAMMA = 0.99
 VALUE_LOSS_COEF = 0.5
 
 LEARNING_RATE = 0.0005
-
-
-def get_obs_diff(prev_obs, cur_obs):
-    prev = np.array(prev_obs)[-1]
-    cur = np.array(cur_obs)[-1]
-    prev = prev.astype(np.float32) / 255.0
-    cur = cur.astype(np.float32) / 255.0
-    return cur - prev
 
 
 def iterate_batches(envs, net, device="cpu"):
@@ -91,26 +82,27 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=True, action="store_true", help="Enable cuda")
     parser.add_argument("-n", "--name", required=False, help="Name of the run", default="_fresh")
-#    parser.add_argument("-m", "--model", required=False, help="File with model to load", default="runs/Apr17_03-21-25_valygrid_01_a2c_True__21_True_RandomGoalsGrid3CFast-v0_64_1_32_0.0005_0.99_0.015_5_False_True_1_5307111950458559820_True_1_-1_524231_16_32/best_RandomGoalsGrid3CFast-v0_0024.000_10000.dat")
-    parser.add_argument("-m", "--model", required=False, help="File with model to load", default="runs/Apr26_01-43-25_valygrid_01_a2c_True__33_True_RandomGoalsGrid3CFast-v0_64_1_32_0.0005_0.99_0.015_9_False_True_1_6781260737374322273_True_1_-1_524231_16_32/best_RandomGoalsGrid3CFast-v0_0015.200_19000.dat")
+#    parser.add_argument("-m", "--model", required=False, help="File with model to load", default="runs/May06_01-24-05_valy_grid_01_a2c_True__21_True_RandomGoalsGrid3CFast-v0_64_1_32_0.0005_0.99_0.015_5_False_True_1_2803944495_True_1_-1_524231_16_32/best_RandomGoalsGrid3CFast-v0_0028.000_13000.dat")
+#    parser.add_argument("-m", "--model", required=False, help="File with model to load", default="runs/May08_03-02-50_valy_grid_01_a2c_RandomGoalsGrid3CFast-v0_21_5_True_128_3_32_0.0008_0.99_0.015_1_3665658711/best_RandomGoalsGrid3CFast-v0_0026.600_6000.dat")
+    parser.add_argument("-m", "--model", required=False, help="File with model to load", default="runs-9/May08_01-50-49_valy_grid_01_a2c_RandomGoalsGrid3CFast-v0_33_9_True_128_3_32_0.0005_0.99_0.015_1_1960534414/best_RandomGoalsGrid3CFast-v0_0014.800_10000.dat")
+#    parser.add_argument("-m", "--model", required=False, help="File with model to load", default="runs/May06_01-23-59_valy_grid_01_a2c_True__21_True_RandomGoalsGrid3CFast-v0_64_1_32_0.0005_0.99_0.015_5_False_True_1_3185480077_True_1_-1_524231_16_32/best_RandomGoalsGrid3CFast-v0_0027.000_20000.dat")
     args = parser.parse_args()
     device = torch.device("cuda" if args.cuda else "cpu")
     
-    SEED = random.randint(0, sys.maxsize)
-    random.seed(SEED)
-    #ENV_NAME = "BreakoutNoFrameskip-v4"
+    SEED = random.randint(0, 2**32 - 1)
     
-    NameForWriter = str(common.pixelsEnv) + "_" + "_" + str(common.FRAME_SIZE) + "_" + str(common.CONV_LARGE) + "_" + common.ENV_NAME + "_" + \
+    NameForWriter = common.ENV_NAME + "_" + str(common.FRAME_SIZE) + "_" + str(common.GRID_SIZE) + "_" + str(common.CONV_LARGE) + "_" + \
                     str(BATCH_SIZE) + "_" + str(common.REWARD_STEPS) + "_" +  str(NUM_ENVS) + "_" + str(LEARNING_RATE) + "_" + \
-                    str(GAMMA) + "_" + str(common.ENTROPY_BETA) + "_"  + str(common.GRID_SIZE) + "_" + \
-                    str(common.PARTIALLY_OBSERVED_GRID) + "_" + str(common.REPLACEMENT) + "_" + str(common.CLIP_GRAD) + "_" + \
-                    str(SEED) + "_" + str(common.USE_FRAMESTACK_WRAPPER) + "_" + str(common.POSITIVE_RW) + "_" + str(common.NEGATIVE_RW) + "_" + str(common.SMALL_CONV_NET_CFG)
+                    str(GAMMA) + "_" + str(common.ENTROPY_BETA) + "_"  + str(common.CLIP_GRAD) + "_" + str(SEED) 
     writer = SummaryWriter(comment = "grid_02_a2c_" + NameForWriter)
     saves_path = writer.log_dir
 
     envs = [common.makeCustomizedGridEnv() for _ in range(NUM_ENVS)]
     
     net = common.getNet(device)
+
+    #sets seed on torch operations and on all environments
+    common.set_seed(SEED, envs=envs)
 
 #    net = common.AtariA2C(envs[0].observation_space.shape, envs[0].action_space.n)
     net_em = i2a.EnvironmentModel(envs[0].observation_space.shape, envs[0].action_space.n).to(device)

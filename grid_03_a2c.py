@@ -19,20 +19,19 @@ import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 
 
-REWARD_STEPS = 1
+common.REWARD_STEPS = 3
 SAVE_EVERY_BATCH = 300
 OBS_WEIGHT = 10.0
 REWARD_WEIGHT = 1.0
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 
 VALUE_LOSS_COEF = 0.5
 GAMMA = 0.99
 
-ENTROPY_BETA = 0.02
+ENTROPY_BETA = 0.015
 
-min_rollouts_steps = 4
-ROLLOUTS_STEPS = 3
-LEARNING_RATE = 1e-4
+ROLLOUTS_STEPS = 5
+LEARNING_RATE = 1e-3
 POLICY_LR = 1e-4
 TEST_EVERY_BATCH = 100
 
@@ -41,37 +40,29 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--name", required=False, help="Name of the run", default="new")
     parser.add_argument("--cuda", default=True, action="store_true", help="Enable CUDA")
-    parser.add_argument("--em", required=False, help="Environment model file name", default="runs/Apr26_01-48-01_valygrid_02_a2c_True__33_True_RandomGoalsGrid3CFast-v0_64_1_32_0.0005_0.99_0.015_9_False_True_1_6972317257006955592_True_1_-1_524231_16_32/best_RandomGoalsGrid3CFast-v0_3.2349e-02_43693.dat")
+    parser.add_argument("--em", required=False, help="Environment model file name", default="runs/May08_03-20-01_valygrid_02_a2c_RandomGoalsGrid3CFast-v0_21_5_True_64_3_32_0.0005_0.99_0.015_1_3254759783/best_RandomGoalsGrid3CFast-v0_2.0368e-02_1144661.dat")
     parser.add_argument("--seed", type=int, default=common.DEFAULT_SEED, help="Random seed to use, default=%d" % common.DEFAULT_SEED)
+    parser.add_argument("--roll_steps", type=int, default=5, help="how many steps in the imagined trajectory")
     args = parser.parse_args()
+    
     device = torch.device("cuda" if args.cuda else "cpu")
-
     
-    SEED = random.randint(0, sys.maxsize)
-    random.seed(SEED)
-    #ENV_NAME = "BreakoutNoFrameskip-v4"
+    SEED = random.randint(0, 2**32 - 1)
     
-    NameForWriter = str(common.pixelsEnv) + "_" + "_" + str(common.FRAME_SIZE) + "_" + str(common.CONV_LARGE) + "_" + common.ENV_NAME + "_" + \
-                    str(BATCH_SIZE) + "_" + str(common.REWARD_STEPS) + "_" +  str(common.NUM_ENVS) + "_" + str(LEARNING_RATE) + "_" + \
+    ROLLOUTS_STEPS = args.roll_steps
+    
+    NameForWriter = common.ENV_NAME + "_" + str(common.FRAME_SIZE) + "_" + str(BATCH_SIZE) + "_" + str(common.REWARD_STEPS) + "_" +  str(common.NUM_ENVS) + "_" + str(LEARNING_RATE) + "_" + \
                     str(GAMMA) + "_" + str(common.ENTROPY_BETA) + "_"  + str(common.GRID_SIZE) + "_" + \
-                    str(common.PARTIALLY_OBSERVED_GRID) + "_" + str(common.REPLACEMENT) + "_" + str(common.CLIP_GRAD) + "_" + \
-                    str(SEED) + "_" + str(common.USE_FRAMESTACK_WRAPPER) + "_" + str(common.POSITIVE_RW) + "_" + str(common.NEGATIVE_RW) + "_" + str(common.SMALL_CONV_NET_CFG) +\
-                    "_" + str(ROLLOUTS_STEPS)
+                    str(SEED) + "_" + str(ROLLOUTS_STEPS)
     writer = SummaryWriter(comment = "grid_03_a2c_" + NameForWriter)
     saves_path = writer.log_dir
 
     envs = [common.makeCustomizedGridEnv() for _ in range(common.NUM_ENVS)]
-    
     test_env = common.makeCustomizedGridEnv()
-
-#    envs = [common.make_env(env_name=ENV_NAME) for _ in range(common.NUM_ENVS)]
-#    test_env = common.make_env(env_name = ENV_NAME)
-
-#    if args.seed:
-#        common.set_seed(args.seed, envs, cuda=args.cuda)
-#        suffix = "-seed=%d" % args.seed
-#    else:
-
+    
+    #sets seed on torch operations and on all environments
+    common.set_seed(SEED, envs=envs)
+    common.set_seed(SEED, envs=[test_env])
 
     obs_shape = envs[0].observation_space.shape
     act_n = envs[0].action_space.n
@@ -102,7 +93,7 @@ if __name__ == "__main__":
     ts_start = time.time()
     best_reward = None
     best_test_reward = None
-    with ptan.common.utils.TBMeanTracker(writer, batch_size=10) as tb_tracker:
+    with ptan.common.utils.TBMeanTracker(writer, batch_size=32) as tb_tracker:
         for mb_obs, mb_rewards, mb_actions, mb_values, mb_probs, done_rewards, done_steps in \
                 common.iterate_batches(envs, net_i2a, device):
             if len(done_rewards) > 0:
@@ -149,5 +140,8 @@ if __name__ == "__main__":
                     best_test_reward = test_reward
                 print("%d: test reward=%.2f, steps=%.2f, best_reward=%.2f" % (
                     step_idx, test_reward, test_steps, best_test_reward))
+            
+            if step_idx > 10000:
+                break
 # -*- coding: utf-8 -*-
 

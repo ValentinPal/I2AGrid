@@ -25,14 +25,14 @@ import torch.nn.functional as F
 NUM_ENVS = 32
 
 
-REWARD_STEPS = 1
+common.REWARD_STEPS = 3
 
 VALUE_LOSS_COEF = 0.5
 
 GAMMA = 0.99
-LEARNING_RATE = 0.0005
+LEARNING_RATE = 0.0008
 ENTROPY_BETA = 0.015
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 
 
 TEST_EVERY_BATCH = 1000
@@ -54,13 +54,10 @@ if __name__ == "__main__":
     
     #NameForWriter includes all the params/hyperparams used in the first step of the I2A (baseline agent)
     #the folder that will be named with this string will contains both the logs for tensorboard and the saved net params.
-    NameForWriter = str(common.pixelsEnv) + "_" + "_" + str(common.FRAME_SIZE) + "_" + str(common.CONV_LARGE) + "_" + common.ENV_NAME + "_" + \
-                    str(BATCH_SIZE) + "_" + str(REWARD_STEPS) + "_" +  str(NUM_ENVS) + "_" + str(LEARNING_RATE) + "_" + \
-                    str(GAMMA) + "_" + str(ENTROPY_BETA) + "_"  + str(common.GRID_SIZE) + "_" + \
-                    str(common.PARTIALLY_OBSERVED_GRID) + "_" + str(common.REPLACEMENT) + "_" + str(CLIP_GRAD) + "_" + \
-                    str(SEED) + "_" + str(common.USE_FRAMESTACK_WRAPPER) + "_" + str(common.POSITIVE_RW) + "_" + str(common.NEGATIVE_RW) + "_" + str(common.SMALL_CONV_NET_CFG)
+    NameForWriter = common.ENV_NAME + "_" + str(common.FRAME_SIZE) + "_" + str(common.GRID_SIZE) + "_" + str(common.CONV_LARGE) + "_" + \
+                    str(BATCH_SIZE) + "_" + str(common.REWARD_STEPS) + "_" +  str(NUM_ENVS) + "_" + str(LEARNING_RATE) + "_" + \
+                    str(GAMMA) + "_" + str(ENTROPY_BETA) + "_"  + str(common.CLIP_GRAD) + "_" + str(SEED) 
     writer = SummaryWriter(comment = "_grid_01_a2c_" + NameForWriter)
-    writer.log_dir = writer.log_dir.replace("runs", "runs-" + str(common.GRID_SIZE))
     saves_path = writer.log_dir
 
     #envs used for sampling tuples of experience    
