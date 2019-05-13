@@ -15,19 +15,19 @@ DEFAULT_SEED = 20
 
 NUM_ENVS = 32
 GAMMA = 0.99
-REWARD_STEPS = 1
+REWARD_STEPS = 3
 ENTROPY_BETA = 0.015
 VALUE_LOSS_COEF = 0.5
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 CLIP_GRAD = 1
 
 channels = 3
 FRAMES_COUNT = 1
-FRAME_SIZE = 33
+FRAME_SIZE = 21
 IMG_SHAPE = (channels * FRAMES_COUNT, FRAME_SIZE, FRAME_SIZE)
 
 ENV_NAME = "RandomGoalsGrid3CFast-v0"
-GRID_SIZE = 9
+GRID_SIZE = 5
 PARTIALLY_OBSERVED_GRID = False
 USE_FRAMESTACK_WRAPPER = True
 CONV_LARGE = True
@@ -268,8 +268,9 @@ def iterate_batches(envs, net, device="gpu"):
         out_mb_actions = mb_actions.flatten()
         out_mb_values = mb_values.flatten()
         out_mb_probs = mb_probs.flatten()
+
         yield out_mb_obs, out_mb_rewards, out_mb_actions, out_mb_values, out_mb_probs, \
-              np.array(done_rewards), np.array(done_steps)
+                  np.array(done_rewards), np.array(done_steps)
 
 
 def train_a2c(net, mb_obs, mb_rewards, mb_actions, mb_values, optimizer, tb_tracker, step_idx, device="cpu"):
