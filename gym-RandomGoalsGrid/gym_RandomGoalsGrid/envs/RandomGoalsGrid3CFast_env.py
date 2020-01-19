@@ -46,7 +46,7 @@ class RandomGoalsGrid3CFast(gym.Env):
             self.frameSize = kwargs.get("frameSize")
             self.objectSize = (int)(self.frameSize/(self.sizeX + 2))
         
-        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3, self.frameSize, self.frameSize), dtype=np.uint8)
+        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3, self.frameSize, self.frameSize), dtype=np.float16)
         
         if 'replacement' in kwargs:
             self.replacement = kwargs.get("replacement")
@@ -81,7 +81,7 @@ class RandomGoalsGrid3CFast(gym.Env):
         self.positiveReward = 1
         self.negativeReward = -1
         self.emptySquareReward = -0.1
-        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3, self.frameSize, self.frameSize), dtype=np.uint8)
+        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3, self.frameSize, self.frameSize), dtype=np.float16)
         self.action_space = gym.spaces.Discrete(n=self.actions)
 #        a = self.reset()
 #        plt.imshow(a,interpolation="nearest")
@@ -111,7 +111,10 @@ class RandomGoalsGrid3CFast(gym.Env):
         else:
             state = self.renderEnv2()
         self.state = state
-        return state
+        return np.copy(self.state)
+
+    # def generate_random_state(self):
+
 
     def moveChar(self,direction):
         # 0 - up, 1 - down, 2 - left, 3 - right
@@ -239,7 +242,7 @@ class RandomGoalsGrid3CFast(gym.Env):
         return a
 
     def renderEnv(self):
-        return self.state
+        return np.copy(self.state)
    
     def renderEnvMatrix(self):
         a = np.zeros((self.sizeX, self.sizeY))

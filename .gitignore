@@ -8,3 +8,6 @@ gym-RandomGoalsGrid/gym_RandomGoalsGrid/__pycache__/
 gym-RandomGoalsGrid/gym_RandomGoalsGrid/envs/__pycache__/
 lib/__pycache__/
 
+/no-repl/
+/repl/
+/new I2A.zip
