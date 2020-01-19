@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .rollout_encoder import RolloutEncoder
+from .rollout_encoder_model import RolloutEncoder
 
 
 class I2A(nn.Module):

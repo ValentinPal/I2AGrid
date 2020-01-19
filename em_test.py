@@ -8,7 +8,7 @@ import argparse
 import gym
 # import gym_RandomGoalsGrid
 
-from models import a2cmodel, i2a_model, environment_model
+from models import a2c_model, i2a_model, environment_model
 from experiment_config import ExperimentCfg
 from lib import common
 from tqdm import tqdm

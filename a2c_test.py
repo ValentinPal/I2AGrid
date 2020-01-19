@@ -1,16 +1,13 @@
-import gym
-import gym_RandomGoalsGrid
+import argparse
 
-import ptan
 import matplotlib.pyplot as plt
-import torch
 import numpy as np
-from models import a2cmodel
-from experiment_config import ExperimentCfg
-from lib import common
+import ptan
+import torch
 from tqdm import tqdm
 
-import argparse
+from experiment_config import ExperimentCfg
+from lib import common
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -24,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--EPISODES", default=3, type=int,required=False, help="")
     parser.add_argument("-a", "--A2C_FILE", default="/home/valy/OneDrive/repos/I2A - all branches/master/runs/Jan18_15-45-16_valy_a2c_14_5_False/best_0004.000_3500.dat",
                         required=False, help="")
-    parser.add_argument("-p", "--PLOT", default="True",required=False, help="")
+    parser.add_argument("-p", "--PLOT", default=False,required=False, help="")
 
     fig, _ = plt.subplots()
 
@@ -55,7 +52,7 @@ if __name__ == "__main__":
             if(config.PLOT):
                 plt.imshow(np.moveaxis(state, 0 ,-1), interpolation = "nearest")
                 plt.show()
-                action = input()
+                # action = input()
             state, r, done, _ = env.step(action)
             total_rw += r
             total_steps += 1

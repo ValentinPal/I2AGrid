@@ -34,12 +34,12 @@ class ExperimentCfg():
                 # {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1}
         ]
         self.EM_CONV1 = [
-                {'in_c': 3, 'out_c': 64, 'k': 5, 's': 2 , 'p':0},
-                {'in_c': 64 , 'out_c': 64, 'k': 3, 's': 2, 'p':1},
+                {'in_c': 3, 'out_c': 64, 'k': 4, 's': 2 , 'p':0},
+                {'in_c': 64 , 'out_c': 64, 'k': 3, 's': 1, 'p':1},
                 {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1, 'p': 1}
         ]
         self.EM_CONV2 = {'in_c': 64, 'out_c': 64,'k': 3, 'p':1}
-        self.EM_DECONV = {'in_c': 64, 'out_c': 3, 'k': 5, 's': 4, 'p': 0}
+        self.EM_DECONV = {'in_c': 64, 'out_c': 3, 'k': 4, 's': 2, 'p': 0}
         self.EM_RW_FC = 512
         self.FC_LAYER = 256
         self.POLICY_LAYER=256
@@ -106,6 +106,7 @@ class ExperimentCfg():
         self.make_base_config(args)
         self.EM_FN= args.EM_FILE
         self.A2C_FN = args.A2C_FILE
+        self.I2A_FN = args.I2A_FILE
         self.EPISODES = args.EPISODES
         self.PLOT=self.str_to_bool(args.PLOT)
         self.INPUT=self.str_to_bool(args.INPUT)

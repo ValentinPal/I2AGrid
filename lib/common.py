@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import torch
-from models.a2cmodel import A2CModel
+from models.a2c_model import A2CModel
 import gym_RandomGoalsGrid
 
 def count_parameters(model):

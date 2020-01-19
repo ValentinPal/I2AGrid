@@ -1,7 +1,11 @@
-ef="runs/Jan19_04-06-15_valy_em_45_13_True/best_8.9945e-05_189474.dat"
-g=13
-f=45
-r=True
+ef="runs/Jan19_21-17-43_valy_em_22_9_False/best_1.3618e-07_184447.dat"
+g=9
+f=22
+r=False
+python i2a_train.py -s 8000 -r $r -g $g -f $f -e $ef -rs 1
+python i2a_train.py -s 8000 -r $r -g $g -f $f -e $ef -rs 1
+python i2a_train.py -s 8000 -r $r -g $g -f $f -e $ef -rs 1
+
 python i2a_train.py -s 8000 -r $r -g $g -f $f -e $ef -rs 2
 python i2a_train.py -s 8000 -r $r -g $g -f $f -e $ef -rs 2
 python i2a_train.py -s 8000 -r $r -g $g -f $f -e $ef -rs 2
