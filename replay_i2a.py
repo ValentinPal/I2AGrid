@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("-in", "--INPUT", default=False, required=False, help="")
     
     config = ExperimentCfg()
-    config.make_replay_config(parser)
+    config.make_i2a_replay_config(parser)
     device = torch.device(config.DEVICE)
 
     env = common.makeCustomizedGridEnv(config)

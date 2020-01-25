@@ -22,8 +22,8 @@ if __name__ == "__main__":
     parser.add_argument("--SEED", type=int, default=20, help="Random seed to use, default=%d" % 20)
     parser.add_argument("--FORCE_SEED", type=int, default=False, help="force to use SEED")
     parser.add_argument("-s", "--STEPS", type=int, default=8000, help="Limit of training steps, default=disabled")
-    parser.add_argument("-g", "--GRID_SIZE", type=int, default=5, help="The size of the grid, default=5", required = False)
-    parser.add_argument("-f", "--FRAME_SIZE", type=int, default=14, help="resolution of the grid, including the borders", required=False)
+    parser.add_argument("-g", "--GRID_SIZE", type=int, default=9, help="The size of the grid, default=5", required = False)
+    parser.add_argument("-f", "--FRAME_SIZE", type=int, default=22, help="resolution of the grid, including the borders", required=False)
     parser.add_argument("-r", "--REPLACEMENT", required=True, help="env with replacement of the squares in back in the grid")
     #create configuration class that holds all configurable parameters for experimentation
     config = experiment_config.ExperimentCfg()
