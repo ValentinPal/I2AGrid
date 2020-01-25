@@ -3,3 +3,4 @@ python a2c_train.py --REPLACEMENT True --GRID_SIZE 13 --FRAME_SIZE 45 --STEPS 80
 
 python a2c_train.py --REPLACEMENT False --GRID_SIZE 13 --FRAME_SIZE 45 --STEPS 8000
 python a2c_train.py --REPLACEMENT False --GRID_SIZE 13 --FRAME_SIZE 45 --STEPS 8000
+python a2c_train.py --REPLACEMENT False --GRID_SIZE 13 --FRAME_SIZE 45 --STEPS 8000
