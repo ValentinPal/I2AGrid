@@ -1,12 +1,31 @@
 import numpy as np
 import gym
 import torch
+import torch.nn as nn
 from models.a2c_model import A2CModel
 import gym_RandomGoalsGrid
+
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+
+def conv2d(input, fi, ks, s):
+    return nn.Sequential(
+        nn.Conv2d(input, fi, ks, s),
+        nn.ReLU()
+        # nn.LeakyReLU()
+        # GeneralRelu(leak = 0.1, sub = 0.3, maxv = 7.)
+    )
+
+
+def linearReLU(input, output):
+    return nn.Sequential(
+        nn.Linear(input, output),
+        nn.ReLU()
+        # nn.LeakyReLU()
+        # GeneralRelu(leak=0.1, sub=0.3, maxv=7.)
+    )
 
 def getNet(device, cfg):
     net = None

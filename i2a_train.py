@@ -28,6 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("-rs", "--ROLL_STEPS", type=int, default=3,help="how many steps in the imagined trajectory")
     parser.add_argument("-s","--STEPS", type=int, default=8000, help="Limit of training steps, default=disabled")
     parser.add_argument("-r","--REPLACEMENT", required=True, help="env with replacement of the squares in back in the grid")
+    parser.add_argument("-lr", required = True, help="learning rate")
 
     config = experiment_config.ExperimentCfg()
     config.make_i2a_config(parser)

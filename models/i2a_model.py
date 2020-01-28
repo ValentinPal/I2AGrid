@@ -9,8 +9,11 @@ from .rollout_encoder_model import RolloutEncoder
 
 
 class I2A(nn.Module):
-    def __init__(self, input_shape, n_actions, net_em, net_policy, config):
+    def __init__(self, input_shape, n_actions, net_em, net_policy, config, grad_cam = False):
         super(I2A, self).__init__()
+
+        self.grad_cam = grad_cam
+        self.last_conv_layer_grad = None
 
         self.n_actions = n_actions
         self.rollout_steps = config.ROLL_STEPS
@@ -61,10 +64,11 @@ class I2A(nn.Module):
     def forward(self, x):
         fx = x.float()
         enc_rollouts = self.rollouts_batch(fx)
-        conv_out = self.conv(fx).view(fx.size()[0], -1)
-        
+        conv_out = self.conv(fx)#.view(fx.size()[0], -1)
+        if self.grad_cam:
+            conv_out.register_hook(self.activations_hook)
         #input to the fc layer requires all the rollouts concatenated
-        fc_in = torch.cat((conv_out, enc_rollouts), dim=1)
+        fc_in = torch.cat((conv_out.view(fx.size()[0]), enc_rollouts), dim=1)
         fc_out = self.fc(fc_in)
         return self.policy(fc_out), self.value(fc_out)
 
@@ -102,3 +106,13 @@ class I2A(nn.Module):
         step_rewards_v = torch.stack(step_rewards)
         flat_enc_v = self.encoder(step_obs_v, step_rewards_v)
         return flat_enc_v.view(batch_size, -1)
+
+    def activations_hook(self, grad):
+        self.last_conv_layer_grad = grad
+
+    def get_activations_gradient(self):
+        return self.last_conv_layer_grad
+
+    def get_activations(self, x):
+        return self.conv(x.float())
+

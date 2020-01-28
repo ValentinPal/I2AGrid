@@ -58,15 +58,18 @@ if __name__ == "__main__":
     
     net = common.getNet(device, config)
     net.load_state_dict(torch.load(config.A2C_FN, map_location=lambda storage, loc: storage))
+    net.eval()
     net.to(device)
 
     # if(config.IS_I2A):
     net_em = environment_model.EnvironmentModel(obs_shape, act_n, config)
     net_em.load_state_dict(torch.load(config.EM_FN, map_location=lambda storage, loc: storage))
     net_em = net_em.to(device)
+    net_em.eval()
 
     net_i2a = i2a_model.I2A(obs_shape, act_n, net_em, net, config).to(device)
     net_i2a.load_state_dict(torch.load(config.I2A_FN, map_location=lambda storage, loc: storage))
+    net_i2a.eval()
     # net = net_i2a
 
     agent = ptan.agent.PolicyAgent(lambda x: net_i2a(x)[0], action_selector=ptan.actions.ProbabilityActionSelector(), apply_softmax=True, device=device)

@@ -145,26 +145,3 @@ for i in range(episodes):
 
 print("Done in %d steps, reward %.2f, negRw %.7f, pred_rw %.3f" % (
 steps, mean_total_rw / episodes, negRws / episodes, mean_total_pred_rw / episodes))
-
-#
-#    action, _ = agent([state])
-#    state, reward, done = env.step(action)
-#    total_rw += reward
-#    steps += 1
-#    renderedEnv = env.renderEnv()
-#    plt.imshow(np.moveaxis(env.renderEnv(), 0 ,-1), interpolation = "nearest")
-#    plt.show()
-#
-#    if done:
-#        game_rw += total_rw
-#        game_count += 1
-#        print (total_rw, steps)
-#        steps = 0
-#        total_rw = 0
-#        state = env.reset()
-#
-#    input()
-##    if(a==5):
-##        break
-#
-# print(game_rw/game_count)

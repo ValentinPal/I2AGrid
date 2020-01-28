@@ -27,23 +27,23 @@ class ExperimentCfg():
         self.NEGATIVE_RW=-1
         self.POSITIVE_RW=1
         self.A2C_CONV_LAYERS= [
-                {'in_c': 3, 'out_c': 64, 'k': 3, 's': 2, 'p':0},
-                {'in_c': 64, 'out_c': 64, 'k': 3, 's': 2, 'p':0},
+                {'in_c': 3, 'out_c': 64, 'k': 3, 's': 1, 'p':0},
+                {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1, 'p':0},
                 {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1, 'p': 0}
                 # {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1, 'p':1},
                 # {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1}
         ]
         self.EM_CONV1 = [
-                {'in_c': 3, 'out_c': 64, 'k': 5, 's': 2 , 'p':0},
-                {'in_c': 64 , 'out_c': 64, 'k': 3, 's': 2, 'p':1},
+                {'in_c': 3, 'out_c': 64, 'k': 3, 's': 1 , 'p':0},
+                {'in_c': 64 , 'out_c': 64, 'k': 3, 's': 1, 'p':0},
                 {'in_c': 64, 'out_c': 64, 'k': 3, 's': 1, 'p': 1}
         ]
         self.EM_CONV2 = {'in_c': 64, 'out_c': 64,'k': 3, 'p':1}
-        self.EM_DECONV = {'in_c': 64, 'out_c': 3, 'k': 5, 's': 4, 'p': 0}
+        self.EM_DECONV = {'in_c': 64, 'out_c': 3, 'k': 5, 's': 1, 'p': 0}
         self.EM_RW_FC = 512
-        self.FC_LAYER = 512
-        self.POLICY_LAYER=512
-        self.VALUE_LAYER= 512
+        self.FC_LAYER = 256
+        self.POLICY_LAYER=256
+        self.VALUE_LAYER= 256
         self.HOOK_SWITCH=False
         self.OBS_WEIGHT=10.0 #weight of the observation prediction in the loss calculation in the EM
         self.REWARD_WEIGHT=1.0
@@ -70,6 +70,7 @@ class ExperimentCfg():
         self.FRAME_SIZE = args.FRAME_SIZE
         self.IMG_SHAPE = (self.CHANNELS * self.FRAMES_COUNT, self.FRAME_SIZE, self.FRAME_SIZE)
         self.REPLACEMENT = self.str_to_bool(args.REPLACEMENT)
+        self.LEARNING_RATE = args.lr
         print(args.REPLACEMENT, type(args.REPLACEMENT))
         print(self.REPLACEMENT, type(self.REPLACEMENT))
         assert (isinstance(self.REPLACEMENT, bool))
@@ -128,6 +129,15 @@ class ExperimentCfg():
         self.A2C_FN = args.A2C_FILE
         self.PLOT=self.str_to_bool(args.PLOT)
         self.INPUT = self.str_to_bool(args.INPUT)
+
+    def make_grad_cam_config(self, parser):
+        args = parser.parse_args()
+        self.make_base_config(args)
+        self.MODE = args.MODE
+        self.EM_FN= args.EM_FILE
+        self.A2C_FN = args.A2C_FILE
+        self.I2A_FN = args.I2A_FILE
+
 
     def build_name_for_writer(self):
         name = str(self.FRAME_SIZE) + "_" \

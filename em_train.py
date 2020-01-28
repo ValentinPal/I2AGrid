@@ -71,6 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--FRAME_SIZE", type=int, default=14, help="resolution of the grid, including the borders", required=False)
     parser.add_argument("-s", "--EM_STEPS", type=int, required=False, default=75000)
     parser.add_argument("-r", "--REPLACEMENT", required = True, help="env with replacement of the squares in back in the grid")
+    parser.add_argument("-lr", required = True, help="learning rate")
     args = parser.parse_args()
 
     #create configuration class that holds all configurable parameters for experimentation
