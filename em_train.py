@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
 #    net = common.AtariA2C(envs[0].observation_space.shape, envs[0].action_space.n)
     net_em = models.environment_model.EnvironmentModel(envs[0].observation_space.shape, envs[0].action_space.n, config).to(device)
-    # net_em.load_state_dict(torch.load("runs/Jan24_15-42-43_valy_em_45_13_True/best_7.6337e-05_172474.dat", map_location=lambda storage, loc: storage))
+#    net_em.load_state_dict(torch.load("/home/valy/OneDrive/experiments/repl/9_22/Jan19_20-40-19_valy_em_22_9_True/best_1.4249e-06_195121.dat", map_location=lambda storage, loc: storage))
     config.EM_NET=str(net_em)
 
     print(net)
