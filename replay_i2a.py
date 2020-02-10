@@ -45,6 +45,7 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--EPISODES", default=1, type=int,required=False, help="")
     parser.add_argument("-p", "--PLOT", default=False, required=False, help="")
     parser.add_argument("-in", "--INPUT", default=False, required=False, help="")
+    parser.add_argument("-lr", required=True, type=float, help="learning rate")
     
     config = ExperimentCfg()
     config.make_i2a_replay_config(parser)

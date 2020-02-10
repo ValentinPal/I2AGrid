@@ -22,6 +22,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--A2C_FILE", default="/home/valy/OneDrive/repos/I2A - all branches/master/runs/Jan18_15-45-16_valy_a2c_14_5_False/best_0004.000_3500.dat",
                         required=False, help="")
     parser.add_argument("-p", "--PLOT", default=False,required=False, help="")
+    parser.add_argument("-lr", required=True, type=float, help="learning rate")
 
     fig, _ = plt.subplots()
 

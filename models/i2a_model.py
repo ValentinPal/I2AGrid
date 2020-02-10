@@ -68,7 +68,7 @@ class I2A(nn.Module):
         if self.grad_cam:
             conv_out.register_hook(self.activations_hook)
         #input to the fc layer requires all the rollouts concatenated
-        fc_in = torch.cat((conv_out.view(fx.size()[0]), enc_rollouts), dim=1)
+        fc_in = torch.cat((conv_out.view(fx.size()[0], -1), enc_rollouts), dim=1)
         fc_out = self.fc(fc_in)
         return self.policy(fc_out), self.value(fc_out)
 

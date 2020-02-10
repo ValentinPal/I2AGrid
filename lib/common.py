@@ -31,7 +31,7 @@ def getNet(device, cfg):
     net = None
     fs = cfg.FRAME_SIZE
     net = A2CModel(cfg.IMG_SHAPE, 4, cfg.A2C_CONV_LAYERS, cfg.POLICY_LAYER, cfg.VALUE_LAYER, cfg.FC_LAYER).to(device)
-    print(net)
+    # print(net)
     return net
 
 def makeCustomizedGridEnv(cfg):

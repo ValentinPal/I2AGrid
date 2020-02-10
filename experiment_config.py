@@ -101,6 +101,7 @@ class ExperimentCfg():
         self.ROLL_STEPS = args.ROLL_STEPS
         self.STEPS = args.STEPS
         self.ROLLOUT_ENCODER = ""
+        self.POLICY_LR = args.plr
 
     def make_i2a_replay_config(self, parser):
         args = parser.parse_args()
@@ -141,7 +142,7 @@ class ExperimentCfg():
 
     def build_name_for_writer(self):
         name = str(self.FRAME_SIZE) + "_" \
-               + str(self.GRID_SIZE) + "_" + str(self.REPLACEMENT)
+               + str(self.GRID_SIZE) + "_" + str(self.LEARNING_RATE) + "_" + str(self.POLICY_LR) + "_" + str(self.REPLACEMENT)
 
         return name
 
@@ -149,7 +150,8 @@ class ExperimentCfg():
         name = str(self.FRAME_SIZE) + "_" \
                + str(self.GRID_SIZE) + "_" \
                + str(self.ROLL_STEPS) + "_"\
+                + str(self.LEARNING_RATE) + "_" \
+                + str(self.POLICY_LR) + "_" \
                 + str(self.REPLACEMENT)
 
         return name
-
