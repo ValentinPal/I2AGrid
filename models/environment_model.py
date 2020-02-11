@@ -19,25 +19,17 @@ class EnvironmentModel(nn.Module):
             modules.append(nn.Conv2d(conv_layers[i]['in_c'], conv_layers[i]['out_c'], conv_layers[i]['k'], conv_layers[i]['s'], conv_layers[i]['p']))
             modules.append(nn.ReLU())
         self.conv1 = nn.Sequential(*modules)
-        # self.conv1 = nn.Sequential(
-        #     nn.Conv2d(n_planes, 64, kernel_size=4, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(64, 64, kernel_size=3,padding=1),
-        #     nn.ReLU(),
-        # )
+
         self.conv2 = nn.Sequential(
             nn.Conv2d(config.EM_CONV2['in_c'], config.EM_CONV2['out_c'], kernel_size= config.EM_CONV2['k'], padding = config.EM_CONV2['p']),
             nn.ReLU()
         )
-        # output is one single frame with delta from the current frame
         self.deconv = nn.ConvTranspose2d(config.EM_DECONV['in_c'], config.EM_DECONV['out_c'], kernel_size= config.EM_DECONV['k'], stride = config.EM_DECONV['s'], padding=config.EM_DECONV['p'])
 
         self.reward_conv = nn.Sequential(
             nn.Conv2d(64, 64, kernel_size=3, stride=1),
-#            nn.MaxPool2d(2),
             nn.ReLU(),
             nn.Conv2d(64, 64, kernel_size=3, stride=1),
-#            nn.MaxPool2d(2),
             nn.ReLU()
         )
 

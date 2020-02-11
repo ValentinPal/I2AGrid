@@ -27,16 +27,6 @@ class I2A(nn.Module):
             modules.append(nn.ReLU())
 
         self.conv = nn.Sequential(*modules)
-        # #takes observations and produces features
-        # self.conv = nn.Sequential(
-        #     nn.Conv2d(input_shape[0], 16, kernel_size=5, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(16, 32, kernel_size=4, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(32, 32, kernel_size=3, stride=1),
-        #     nn.ReLU(),
-        # )
-
         conv_out_size = self._get_conv_out(input_shape)
         #rollouts are always performed for all actions available
         #so the input size for policy and V(s) need to account for all rollouts of all actions
@@ -49,8 +39,6 @@ class I2A(nn.Module):
         self.policy = nn.Linear(config.POLICY_LAYER, n_actions)
         self.value = nn.Linear(config.VALUE_LAYER, 1)
 
-        # used for rollouts
-#        self.encoder = RolloutEncoder(EM_OUT_SHAPE)
         self.encoder = RolloutEncoder(config.IMG_SHAPE, config.ROLLOUT_HIDDEN, config.A2C_CONV_LAYERS)
         self.action_selector = ptan.actions.ProbabilityActionSelector()
         # save refs without registering
@@ -64,7 +52,7 @@ class I2A(nn.Module):
     def forward(self, x):
         fx = x.float()
         enc_rollouts = self.rollouts_batch(fx)
-        conv_out = self.conv(fx)#.view(fx.size()[0], -1)
+        conv_out = self.conv(fx)
         if self.grad_cam:
             conv_out.register_hook(self.activations_hook)
         #input to the fc layer requires all the rollouts concatenated
@@ -92,12 +80,7 @@ class I2A(nn.Module):
             # don't need actions for the last step
             if step_idx == self.rollout_steps-1:
                 break
-            # combine the delta from EM into new observation
-#            cur_plane_v = obs_batch_v[:, 1:2]
-##            cur_plane_v = obs_batch_v
-#            new_plane_v = cur_plane_v + obs_next_v #add the observations together, resulting the same shape
-#            obs_batch_v = torch.cat((cur_plane_v, new_plane_v), dim=1)
-            # select actions
+
             logits_v, _ = self.net_policy(obs_batch_v)
             probs_v = F.softmax(logits_v, dim=1)
             probs = probs_v.data.cpu().numpy()

@@ -15,14 +15,6 @@ class RolloutEncoder(nn.Module):
             modules.append(nn.ReLU())
 
         self.conv = nn.Sequential(*modules)
-        # self.conv = nn.Sequential(
-        #     nn.Conv2d(input_shape[0], 16, kernel_size=5, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(16, 32, kernel_size=4, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(32, 32, kernel_size=3, stride=1),
-        #     nn.ReLU(),
-        # )
 
         conv_out_size = self._get_conv_out(input_shape)
 

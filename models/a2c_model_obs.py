@@ -17,14 +17,6 @@ class A2CModel(nn.Module):
             modules.append(nn.ReLU())
 
         self.conv = nn.Sequential(*modules)
-        # self.conv = nn.Sequential(
-        #     nn.Conv2d(input_shape[0], 32, kernel_size=5, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(32, 64, kernel_size=4, stride=2),
-        #     nn.ReLU(),
-        #     nn.Conv2d(64, 64, kernel_size=3, stride=1),
-        #     nn.ReLU()
-        # )
 
         self.deconv = nn.ConvTranspose2d(config.EM_DECONV['in_c'], config.EM_DECONV['out_c'],
                                          kernel_size=config.EM_DECONV['k'], stride=config.EM_DECONV['s'],
